@@ -1,0 +1,1159 @@
+---
+title: "Cambridge Crime Analysis"
+author: "Pankaj Shah"
+date: "12/24/2018"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '4'
+  html_document:
+    code_folding: hide
+    theme: journal
+    toc: yes
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 200px;
+    height: 100%;
+    max-width: 800px;
+    margin: auto;
+    line-height: 20px;
+    toc_depth: 4
+    toc_float: no
+    warning: no
+---
+<style>
+body {
+text-align: justify}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# **Introduction**{.tabset .tabset-fade .tabset-pills}
+
+The Cambridge Police Department have announced that crime in Cambridge dropped for the sixth consecutive year to unprecedented levels not recorded since 1961. The results were released after the Cambridge Police Department’s Crime Analysis Unit recently finalized figures.Analysis of the overall statistics shows declines in both property and violent crime - 8 percent and 7 percent, respectively for the year 2016. Violent crime has declined by 75 percent since 1990, the most violent year on record in Cambridge. The total number of reports of murder and non-negligent homicide, rape, robbery, aggravated assault, burglary, motor vehicle theft, larceny-theft, and arson was at its lowest since 1961[ Comparing to External Data Source]
+
+These historically low crime rates can be reflect as the high quality and excellent service from the Cambridge Police Department delivers to their community and I believe data analysed and used in most efficient way to work.Cambridge crimes considered serious went down 10 percent in the first four months of this year 2018 compared with the same period last year.We have data for only 6 momths of 2018. While 42 fewer crimes were reported this year when compared with the same time period last year.According to police in the year 2017, the City of Cambridge recorded its lowest crime index total since 1963. That downward spiral of serious criminal activity in the city has continued throughout the first four months of 2018 as we have seen on our datasets.
+
+According to the cambridge Police Department, most of the people who commit crimes in Cambridge don’t live there, so it is probably not simply a story that criminals were priced out and moved away because of housing market taking a spike. Upon inquiring I found out that The Cambridge Police Department works very closely with BAIR Analytics Inc in controlling crimes in Cambridge Neighborhood. They have recently partnered to provide a new way for the public to stay informed about crime in Cambridge. The Cambridge Police Department now has an online crime map called RAIDS Online (www.raidsonline.com) that maps and analyzes crime data, alerts Cambridge citizens about crimes in their area, and allows the Cambridge Police Department to quickly alert the public about crimes as they occur.
+
+I really enjoyed diving into the datasets and here's why I think you will too. The datasts is very limited with 68,000 Observations and 7 variables. Like other project report which I have done in Bostion Crime Analysis, this datasets was limited in multi layered fators like latitude, longitude. Anyways I try to do best Whatever I could with this Datasets as alternative approach and different Exploratory Analysis. 
+
+
+## Executive Summary
+
+*  Top most Crimes that are reported in Cambridge are Shoplifting which is more prevalant in East Cambridge, Larcency from Motor Vehicles, Hit and Run,Domestic dispute, Larcency from Person are other types of crimes which are reported most. 
+* Crime in Cambridge dropped for the sixth consecutive year to unprecedented levels not recorded since 1961.
+*  In East Cambridge Area we see more shop lifting. Presence of Galleria Mall.
+*  In CambridgePort,West Cambridge & Mid Cambridge Area most of the crimes are related to Larcency from Motor Vehicle.
+*  Most of the crimes related to Hit and Run occurs in North Cambridge Area.
+*  Domestic Dispute are more prevelant in Area 4, Inman/Harrington neighborhood.
+*  Hit and Run is top most crime in MIT, Higlands area but very few compare to other neighborhoods.
+*  Top most crime in Strawberry Hill is Domestic Dispute which is again very less compare to other Neighborhoods.
+*  Larcency from Person are more prevelant in Riverside Neighborhood.
+*  Most of the crimes are reported from Cambridgeport followed by East Cambridge Neighborhood and Area 4.
+* 100 Cambridgeside place is mostly reported location followed by 600 Massachusetts Ave and then 500 Massachusetts Avenue.
+*  When breaking down 13 Neighborhood we find 4 groups which shows similar pattern through out the time period. Similar is the case in half year of 2018 data.
+* The crime is lowest at 5AM whereas highest is reported around 5PM.
+* Major crimes account for 70% of crime datasets and 30% of crime datasets comes from minor crime.
+* As per the report I did find truth that 2017 was lowest reported crime compare to rest of the year.
+* Crimes picks up in Summer month and drops down during the winter month.
+* Larcency from motor vehicle is high during the summer months in west Cambridge as well as Cambridgeport Area.
+* On our heatmap we did find out that Feb 23rd around 4'o clock we have nore Hit and Run cases than any others. It could be one single case or more multiple case on that day.
+* Around December the Larcency from property is reported more than any other crime in some neighborhoods.
+* There are many insights inside each plot and bargraph to know more.
+
+
+## Information
+
+Cambridge, MA has a population of 108,757 people with a median age of 30.5 and a median household income of 83,122 Between 2015 and 2016 the population of Cambridge, MA grew from 107,916 to 108,757, a 0.78% increase and its median household income grew from 79,416 to 83,122, a 4.67% increase.
+
+The population of Cambridge, MA comprises major population of  62.2% White followed by  15.2% Asian, and 10% Black. 31.7% of the people in Cambridge, MA speak a non-English language, and 82.8% are U.S. citizens.
+
+The largest universities in Cambridge, MA are Harvard University, with 7,668 graduates, Massachusetts Institute of Technology, with 3,620 graduates, and Lesley University, with 1,664 graduates.
+
+The median property value in Cambridge, MA is $629,700, and the homeownership rate is 36.9%. Most people in Cambridge, MA commute by Public Transit, and the average commute time is 23.5 minutes. The average car ownership in Cambridge, MA is 1 car per household.Cambridge is a census place located in Middlesex County, MA. It borders Arlington, Belmont, Boston, Somerville and Watertown Town.
+
+
+## Description
+
+List of crime incidents featured in the Cambridge Police Department’s Annual Crime Reports and reported in the City of Cambridge from 2009-2018. Includes 54 different crime types. Certain crime types are excluded due to confidentiality and/or protection of privacy. 
+
+**Please Note: Addresses do not represent the actual location of the crime, but a near approximation within 100 block ranges.** 
+
+According to Cambridge Police they stated that "All statistics, including yearly totals and weighted averages, are calculated using the best available data at the time. Occasionally, after our reports are published, factors determined during investigation will cause us to reclassify a crime to a higher or lower category, and thus you may see slight discrepancies between current and past reports."
+
+Lets import all the necessary libraries to do Exploratory Data Analysis for City of Cambridge. 
+
+# **Data** {.tabset .tabset-fade .tabset-pills}
+
+**How I define all these datasets**
+
+ * df : Full datasets from Jan 2009 to June 2018.
+ * df_2018 : Datasets from Jan 2018 to June 2018.
+ * df_2017 : Datasets from Jan 2017 to Dec 2017.
+ * ca_crime_df: Datasets from Jan 2009 to Dec 2017.
+
+## LIBRARY
+
+```{r, echo = TRUE, warning=FALSE, message=FALSE}
+library("ggplot2") # Data visualization
+library("gridExtra") # ggplot subplotting
+library("readr") # CSV file I/O, e.g. the read_csv function
+library("dplyr") # Manipulating DataFrames
+library("lubridate") # Date
+library("janitor") # Clean Columns
+library("tidyr")
+library("tidyverse")
+library("DataExplorer")
+library("reshape2")
+library("data.table")
+library("DT")
+library("d3heatmap")
+library("tigerstats")
+library("corrplot")
+library("viridis")
+library("plotly")
+library("tm")
+library("RColorBrewer")
+library("leaflet")
+library("wordcloud")
+
+
+# Theme
+theme_pankaj <- theme(
+                    strip.background = element_blank(),
+                    panel.background = element_rect(size = 0.05, linetype = "solid"),
+                    plot.background = element_rect(fill = "white", color = "black", size = 5),
+                    plot.title = element_text(color="#D70026", size=14, face="bold.italic", hjust = 0.5, vjust=0.5),
+                    plot.subtitle = element_text(color="#993333", size=14, face="bold.italic", hjust = 0.5, vjust=0.5),
+                    plot.caption=element_text(size=9.5, hjust=1.0, vjust=1.05,margin=margin(t= 15)),
+                    plot.margin = unit(c(0.75, 0.75, 0.75, 0.75), "cm"),
+                    panel.border = element_blank(),
+                    panel.grid.major =   element_line("white"),
+                    panel.grid.minor =   element_line("white"),
+                    legend.key = element_blank(),
+                    legend.background = element_blank(),
+                    legend.position = "right",
+                    legend.text = element_text(size=9,color= "black", face = "bold"),
+                    legend.title=element_text(size=10,color="black", face= "bold.italic"), 
+                    axis.title.y = element_text(color = "#993333", size=14,hjust = 0.5, face = "bold.italic"),
+                    axis.title.x = element_text(color = "blue", size=14, hjust = 0.5, face = "bold.italic"),
+                    axis.text.y = element_text(color = "black", size = 12),
+                    axis.text.x = element_text(color = "black", size = 12),
+                    strip.text = element_text(size = 16, color = "red"),
+                    axis.line = element_line(color = "black", size = 0.5),
+                    axis.ticks = element_line(color = "black"))
+```
+
+
+**Let's import our csv file**
+
+```{r}
+raw_crime = read.csv('~/Desktop/R_Pubs/Cambridge_crime_analyst/Crime_Reports.csv', sep = ",", na.strings =c('','NA','na','N/A','n/a','NaN','nan'), strip.white = TRUE, stringsAsFactors = FALSE)
+```
+
+## Map of Cambridge
+**Setting the condition, testing the water before diving in** 
+
+```{r}
+leaflet() %>%
+  setView(lng=-71.1097, lat=42.3736, zoom = 12) %>% # Extracted Lat and Long from Google 
+  addTiles() %>%
+  addMarkers(lng=-71.1097, lat=42.3736, popup="Cambridge")  
+```
+
+Above Map gives you general prespective of the location. Cambridge is a city in Middlesex County, Massachusetts, United States, in the Boston metropolitan area, situated directly north of the city of Boston proper, across the Charles River. It was named in honor of the University of Cambridge in England, an important center of the Puritan theology embraced by the town's founders. Cambridge is home to two of the world's most prominent universities, Harvard University and the Massachusetts Institute of Technology.
+
+Cambridge, Massachusetts's estimated population is 113,630 according to the most recent United States census estimates. Cambridge, Massachusetts is the 4th largest city in Massachusetts based on official 2017 estimates from the US Census Bureau.
+
+```{r}
+df <- raw_crime # Lets call it df, keep it simple, nice and easy to code
+colnames(df) # Lets see the column names
+```
+
+## Data Info
+
+**Missing Data Vizualizations**
+```{r}
+# fix the column name.
+df <- clean_names(df)
+
+# Writing function to get info about our datasets
+df_info <- function(x) {
+  data  <- as.character(substitute(x))  ##data frame name
+  size <- format(object.size(x), units="Mb")  ##size of data frame in Mb
+  
+  plot_missing(data.frame(x)) # Vizualization of Missing Data.
+  
+  ##column information
+  column.info <- data.frame( column        = names(sapply(x, class)),
+                             #class         = sapply(x, class),
+                             unique.values = sapply(x, function(y) length(unique(y))),
+                             missing.count = colSums(is.na(x)),
+                             missing.pct   = round(colSums(is.na(x)) / nrow(x) * 100, 2))
+                            
+  row.names(column.info) <- 1:nrow(column.info)
+  list(data.frame     = data.frame(name=data, size=size),
+       dimensions     = data.frame(rows=nrow(x), columns=ncol(x)),
+       column.details = column.info)
+}
+Sys.timezone() # Will Display Time zone of your zone
+
+# Information about the datasets
+df_info(df)
+```
+
+Gather some basic Information about the datasets before exploration. 
+The datasets is 18.5 Mb with 68010 Rows/observation and 7  different Columns. Most of the missing values are coming from location column almost 40%.
+
+Only Missing data is the location which Cambridge Police Department declare that missing data in location could be because of sensitivity and missing reporting locations.Also location doesn't provide exact location of crime but 100 block crime area.
+
+#**Duplicated data**{.tabset .tabset-fade .tabset-pills}
+
+**Lets check for any duplicates**
+
+```{r}
+length(unique(df$file_number)) # 68010 is total observations we have in our datasets and from there we have 68008 unique values so taking file number as measures fits completly well. 
+duplicate_data <- get_dupes(df, file_number) # file numbers have more unique values than other column.
+duplicate_data
+
+df <- distinct(df) # By doing this we will drop those two rows.
+# dim(df) # Uncomment to see the dimension should be 680008 rows of observations.
+```
+
+As out of 68010 we have only 3 duplicated data. We kept only non duplicated data into our datasets.Although it doesn't affect our results but when we see something we should do something.
+
+**Glimpse of Unique datasets **
+```{r, message=FALSE}
+glimpse(df)
+```
+
+# **Date of Report**{.tabset .tabset-fade .tabset-pills}
+
+Lets starts to work with Date of Report Column
+
+```{r}
+df$date_of_report <- mdy_hms(df$date_of_report) # our date is in mdy_hms format.
+head(df$date_of_report, 3) # sanity check POSIXct class
+df$date_of_report <- as.Date(df$date_of_report)
+# class(df$date_of_report) # Convert into Date
+
+df %>%
+  mutate(year = lubridate::year(date_of_report)) %>% 
+  group_by(year) %>% 
+  count(date_of_report) %>% # count no.of incidence reported throughou the year
+  ggplot(aes(year, n))+
+  geom_boxplot(aes(group = cut_width(year, 0.25)), outlier.alpha = 0.3, outlier.colour = "red", outlier.shape = 1)+
+  labs(title ="Box plot of Crime Incident Reported throughout the year", color = "red")+
+  labs(caption = "Source: Cambridge Data | @ Pankaj Shah")+
+  theme(plot.title = element_text(color="#D70026", size=14, face="bold.italic", hjust = 0.5, vjust=0.5))
+
+# Differ
+by_date <- df %>% group_by(date_of_report) %>% dplyr::summarise(Total = n())
+ggplot(by_date, aes(date_of_report, Total, color = date_of_report)) + 
+  geom_line()+
+  ggtitle("Time Series Pattern for Distribution of crime") +
+  theme(plot.title = element_text(color="#D70026", size=14, face="bold.italic", hjust = 0.5, vjust=0.5))+
+  labs(caption = "Source: Cambridge Data | @ Pankaj Shah")
+```
+
+# **Crime date time**{.tabset .tabset-fade .tabset-pills}
+
+```{r warning=FALSE}
+# Lets extract year, month, day, day_of_weeek frrom our date of report column.
+df <- df %>%
+  dplyr::mutate(year = lubridate::year(date_of_report), 
+                month = lubridate::month(date_of_report), 
+                day = lubridate::day(date_of_report), 
+                dow = lubridate::wday(date_of_report))
+# Should observe we have now 11 variables.
+
+head(df$crime_date_time, 3)
+# sum(is.na(df$crime_date_time)) 
+# Lets split our crime_report_date column into start datetime and end datetime column.
+df <- df %>% separate(crime_date_time, into = c("sdatetime", "edatetime"), sep = "-")
+df$edatetime[is.na(df$edatetime)] <- "11:59" # Imputing missing values with 11:59 PM.If its missing then it was closed by midnight.
+
+# class(df$sdatetime)
+df$sdatetime <- mdy_hm(df$sdatetime)
+# Lets extract hour from the coulmn.
+df$hour <- hour(df$sdatetime)
+
+# Full list of al the crimes plotted in plotly
+plot_crime_offense_category = plot_ly(df, x = ~ crime, color = ~hour) %>% 
+  add_histogram() %>%
+  layout(
+    title = "Total crime count distributed by hour",
+    xaxis = list(title = "crime",
+    yaxis = list(title = "Count"))
+  )
+plot_crime_offense_category
+```
+
+Here we have two date observation in same column seperated by space. These two vraibales are wrapped around quotes. By observing in detail I have found out that one timestamp is when the crime has been reported and another time stamp is when the case was closed/dismissed.Lets seperate these one column into two column. If the crime was closed on same day then we will see the end date column is missing.In the beginning we saw 11 missing values in "crime_report_date" those are the same column which have missing crime_report time. We can fill these missing values from date of report which is slightly different from the crime report date but doesnt varry more.
+
+**Highlights**
+
+* Hit and Run happen During the day.
+* Mostly Domestic dispute are reported either in evening or during the day.
+* Shop Lifting happens during the day.
+* Warrant Arrest happens mostly during the day.
+* Threats call are reported mostly in day.
+* Very less weapon Violations.
+* Larcency from Motor Vehicles happens around Evening.
+* Larcency from Building happens during the day when people are not in house.
+* Forgery are reported mostly in morning and day.
+* Simple Assault are reported late at night.
+
+# **Shift**{.tabset .tabset-fade .tabset-pills}
+
+Lets breakdown our crime data by shift so that we know what types of crime occur through out the day.I beleive the officer works may be in 3 shift pattern but due to lack of validity of our source I will break down the data into 4 shifts so that its easy for us to visualise the patterns and crime easier.
+```{r}
+time_diff <- c("0", "6", "12", "18", "24") # Breaking day into 6 interval period
+df$time_diff <- cut(df$hour, 
+                      breaks = time_diff,
+                      labels = c("00-06", "06-12", "12-18", "18-24"), 
+                      include.lowest = TRUE)
+table(df$time_diff)
+
+#createing Shift plot
+df <- df %>% mutate(shift = ifelse(time_diff == "00-06", "Late Night",
+                                                     ifelse(time_diff == "06-12", "Morning",
+                                                             ifelse(time_diff == "12-18", "Day",
+                                                                    "Evening"))))
+x <- table(df$shift)
+x <- as.table(x)
+x/sum(margin.table(x, 1))
+```
+Most of the crimes are reported during the day(12pm-18pm) almost 36 % followed by Morning (6am-12pm) crimes around 26% and least happens between 12am-6am.
+
+* Hit and Run & Shopliftings are reported during the day.
+* Larcency and Domestic Dispute are reported during the Evening.
+* Forgery and House breaks are reported in the Morning.
+* 
+
+## **Hour** 
+```{r}
+plot_crime_offense_category = plot_ly(df, x = ~ crime, color = ~shift) %>% 
+  add_histogram() %>%
+  layout(
+    title = "Total crime count distributed by hour",
+    xaxis = list(title = "crime",
+    yaxis = list(title = "Count"))
+  )
+plot_crime_offense_category
+```
+
+**you can Zoom in/out using hoover tooltips to see details**
+
+# **Reporting Area**{.tabset .tabset-fade .tabset-pills}
+
+```{r}
+# length(unique(df$reporting_area))
+df %>% 
+  count(reporting_area, month = floor_date(date_of_report, "month")) %>% 
+  filter(month > min(month)) %>% 
+  filter(month < max(month)) %>% 
+  ggplot(aes(month, n , color = reporting_area))+
+  labs(caption= "Data Source : Cambridge  |@ Pankaj Shah")+
+  geom_line()+
+  labs(title = "Reporting Area count throughout the year")+
+  theme_pankaj
+```
+
+# **Neighborhood**{.tabset .tabset-fade .tabset-pills}
+
+Recent dataframe_df refers to datasets from 2009 to 2017.Would like to call Recent as it is complete datasets thats why. Don't confuse with 2018 partial dataframe. only for some comaparison of Crimes, Neighborhood and some other purpose we will use 2018 Partial data. Most of the analysis will be done on full datasets from 2009 to 2017.
+
+**Check the Cambridge Neighborhood Link Below:**
+
+https://commons.wikimedia.org/wiki/File:Neighborhood_Map_of_Cambridge,_MA.png#/media/File:Neighborhood_Map_of_Cambridge,_MA.png
+
+
+```{r}
+# We will ignore the year 2018 half a year data to see which crimes top the list from 2009 to 2017.
+
+#1. Compare Overall from year 2009 to 2017.
+ca_crime_df <- df[which(as.numeric(df$year) < 2018), ] # Lets filter our datasets
+ca_crime_df %>%
+  filter(!is.na(neighborhood)) %>%
+    group_by(neighborhood) %>%
+    summarise(count = n(),na.rm = TRUE) %>%
+  arrange(desc(count)) %>% 
+  ungroup() %>%
+  mutate(neighborhood = reorder(neighborhood, count)) %>% 
+    ggplot(aes(x = neighborhood, y = count))+
+    geom_bar(stat = "identity", color = "white", fill = "skyblue")+
+    geom_text(aes(x= neighborhood, y = 1, label = paste0("(",count,")", sep = "")),
+              hjust =0, vjust =.5, size = 4, color = 'black', fontface = 'bold')+
+  labs(x = "Neighborhood", y = "count", title = "Total crime in Each Neighboorhood from 2009-2017 ")+
+  coord_flip()+
+  theme_pankaj+
+  labs(caption= "Data Source : Cambridge |@ Pankaj Shah")
+
+
+#2. Compare only for year 2017 and see if there is any change from 2009 to 2017.
+
+# For year 2017
+
+df_2017 <- df[which(as.numeric(df$year) == 2017), ]
+df_2017 %>%
+  filter(!is.na(neighborhood)) %>%
+    group_by(neighborhood) %>%
+    summarise(count = n(),na.rm = TRUE) %>%
+  arrange(desc(count)) %>% 
+  ungroup() %>%
+  mutate(neighborhood = reorder(neighborhood, count)) %>% 
+    ggplot(aes(x = neighborhood, y = count))+
+    geom_bar(stat = "identity", color = "white", fill = "orange")+
+    geom_text(aes(x= neighborhood, y= 1, label = paste0(count, sep = "")),
+              hjust =0, vjust =0.5, size = 4, color = 'black', fontface = 'bold')+
+  labs(x = "Neighborhood", y = "count", title = "Total crime in Neighboorhood only in year 2017")+
+  coord_flip()+
+  theme_pankaj+
+  labs(caption= "Data Source : Cambridge |@ Pankaj Shah")
+
+# 3. See if there is any shift happening moving forward for half a year. [Same trend]
+
+# Only For year 2018 
+
+df_2018 <- df[which(as.numeric(df$year) == 2018), ]
+df_2018 %>%
+  filter(!is.na(neighborhood)) %>%
+    group_by(neighborhood) %>%
+    summarise(count = n(),na.rm = TRUE) %>%
+  arrange(desc(count)) %>% 
+  ungroup() %>%
+  mutate(neighborhood = reorder(neighborhood, count)) %>% 
+    ggplot(aes(x = neighborhood, y = count))+
+    geom_bar(stat = "identity", color = "white", fill = "#636363")+
+    geom_text(aes(x= neighborhood, label = paste0(count, sep = "")),
+              hjust =0, vjust =0.5, size = 3, color = 'black', fontface = 'bold')+
+  labs(x = "Neighborhood", y = "count", title = "Total crime in Neighboorhood for 2018")+
+  coord_flip()+
+  theme_pankaj+
+  labs(caption= "Data Source : Cambridge |@ Pankaj Shah")
+# length(unique(df$neighborhood))
+# sort(table(ca_crime_df$neighborhood), decreasing = TRUE)
+```
+
+We can see there is slight change in the position but overall the number of incident being report is almost the same. Here we compare past data from 2009 to 2017, year alone 2017 and half a year of datasets 2018 and found out that the pattern remains the same. Same trend apart from little ups and downs which is good thing for Cambridge Police as they can focus on same pattern rather than being suprised and need to use more force or more planning. It is easy to control crime when patterns remain constant throught the cycle. It is easy to predict. 
+
+Both East Cambridge and Cambridgeport reports most of the crimes. 
+
+External Data source: If I could have external validated data source with population census. I could have normalise these data by population census count to see if geography was the reason for the counts in crime. Hypothetically the probability of crime increases as population density per square foot increases. Another theory could be exploring the datasets with poverty/education rate for casual infrences. For now we will just concentrate on the data that is avialable through Cambridge Data Portal.
+
+# **Top 10 crimes** {.tabset .tabset-fade .tabset-pills}
+
+```{r warning= FALSE}
+ca_crime_df %>%
+  filter(!is.na(crime)) %>%
+    group_by(crime) %>%
+    summarise(count = n(),na.rm = TRUE) %>%
+    arrange(desc(count)) %>% 
+    ungroup() %>%
+    mutate(crime = reorder(crime, count)) %>% 
+    head(10)%>% 
+    ggplot(aes(x = crime, y = count)) +
+    geom_bar(stat = "identity", color = "white", fill = "burlywood4") +
+    geom_text(aes(x= crime, y = 1, label = paste0( "  ",count)),
+              hjust =0, vjust =.5, size = 4, color = 'black', fontface = 'bold')+
+  labs(x = "crime", y = "count", title = "Top crime in Neighboorhood from 2009 to 2017 distibuted")+
+  coord_flip()+
+  theme_pankaj +
+  labs(caption= "Data Source : Cambridge |@ Pankaj Shah")+
+  theme( plot.title = element_text(hjust = 1.0, vjust=0.5))
+
+# length(unique(df$crime)) # We have 54 different types of crime which are reported.
+
+y <- ca_crime_df %>% filter(!is.na(crime)) %>% group_by(crime) %>% summarise(count = n(),na.rm = TRUE) %>% arrange(desc(count)) %>% ungroup() %>% mutate(crime = reorder(crime, count)) 
+
+# If you want to see data table scroll up and see.
+datatable(y[,c("crime","count")], 
+          class = 'compact', options = list(sDom  = '<"top">lrt<"bottom">'))
+```
+
+**You can choose how many enteries.**
+
+We have Hit and Run related to Motor Vehicle crime on top of List followed by Larceny from motor vehicle and then to domestic dispute from year 2009 to end of 2017. In our Boston Datasets we also saw crimes related to Motor Vehicle coming on top of the list.Seems like Motor Vehicel related crimes are more frequent in two close neighboorhood.
+
+Lets see if the crimes have been decreasing over the year or did at some point the crimes have different pattern.Lets revisit the count to see if there was decreasing crimes year after year.
+
+## other crimes
+
+```{r warning=FALSE}
+# Full list of al the crimes plotted in plotly
+plot_crime_offense_category = plot_ly(ca_crime_df, x = ~ crime, color = ~hour) %>% 
+  add_histogram() %>%
+  layout(
+    title = "Total crime count distributed by hour",
+    xaxis = list(title = "crime",
+    yaxis = list(title = "Count"))
+  )
+plot_crime_offense_category
+```
+
+
+We can see other minor crimes. Seems like almost 80% crimes are coming from top 10 crimes and rest 20% crimes are made up of all small minor crimes.
+
+# **Crimes/Year** {.tabset .tabset-fade .tabset-pills}
+
+```{r}
+z <- ca_crime_df %>%
+  filter(!is.na(year)) %>%
+    group_by(year) %>%
+    summarise(count = n(),na.rm = TRUE) %>%
+    arrange(desc(count)) %>% 
+    ungroup() %>%
+    mutate(year = reorder(year, count)) #%>% 
+    ggplot(z, aes(x = year, y = count))+
+    geom_bar(stat = "identity", color = "white", fill = "lightgreen")+
+    geom_text(aes(x= year, y = 1, label = paste0(" ",count)),
+              hjust =0, vjust =.25, size = 4, color = 'black', fontface = 'bold')+
+    labs(x = "crime", y = "count", title = "Total crime in Cambridge Neighboorhood from year 2009-2017 ")+
+    coord_flip()+
+    theme_pankaj+
+    labs(caption= "Data Source : Cambridge Data |@ Pankaj Shah")
+
+datatable(z[,c("year","count")], 
+          class = 'compact', options = list(sDom  = '<"top">lrt<"bottom">'))
+```
+
+As we can see that from 2009 till 2017, the lowest was reported in 2017. If you compare the numbers they are not so much different, they lie in same ball park.If we compare year 2011 and year 2017 we can see the difference is almost drop in 16% but that is difference between having more crime reported and recent years. Similarly if we compare when they start collecting digital data the change is almost 14% drop which can be said remarkable.
+
+## **Neighboorhood Crime/year** {.tabset .tabset-fade .tabset-pills}
+
+**Crime breakdown report by Neighboorhood over the years**
+
+Lets see how the neighborhood reported crime Over the years have shifted. We will cut off the year 2018 otherwise we will see all the crimes dropping down as we don't have full year data. 
+
+```{r}
+ggplot(subset(ca_crime_df,!is.na(neighborhood)))+
+  aes(x=year, color=neighborhood)+
+  geom_line(stat="count")+
+  scale_x_continuous(breaks = seq(2009,2018,1))+
+  scale_y_continuous(breaks = seq(5000,50000,5000))+
+  labs(title="Frequency of Incidents by Neighborhood", x="Neighborhood", y="Number of Incidents")+
+  labs(caption = "Source: Cambridge | @ Pankaj Shah") +
+  theme_pankaj
+```
+
+Lets break down the anlayis part by neighboorhood. We can see there are 4 different groups formed out of 13 neighboorhood. East Cambridge and Cambridgeport remains on top of the list throughout the year. I also found out that Cambridge Police headquarter is also situated in East Cambridge neighboorhood which makes perfect sense looking at the crime distributions.
+
+**East Cambridge**
+
+In year 2011 where most of crimes was reported came mostly from East Cambridge, as we can see spike of crimes and then next year it was drop down even less than 2010.In the year 2014 we can see again Crimes are picking up. Although it remains on top of the list compare to rest of the neighboorhood overall the crime patterns seems to drop.
+
+**CambridgePort**
+
+CambridgePort follows different path than East Cambridge taking a peek in year 2013 and dropping down afterwards and staying flat. Both of these two district reports heavily in crime than other neighboorhood.
+
+MIT, Strawberry Hill, Highlands stays & Agassiz fall in one group where crimes are reported very less. MIT area is mostly inhabitaed by MIT professsionals and campuses. Strawberry Hill resides very close to Belmont and Watertown line where crime rates are reported less than any other cities in Massachusetts(External Data). Cambridge Highlands resides next to strawberry Hill but apart from that it is hard to say anything about it. May be if we have population density datasets and other couple validate  source datasets to determine the casual infrence of these 4 neighboorhoods crime. 
+
+
+# **Location**{.tabset .tabset-fade .tabset-pills}
+
+We need to split and clean up the location 
+```{r}
+ca_crime_df <- ca_crime_df %>% separate(location , into = c("street", "City", "State"), sep = ",") # split the location into street, city and State
+ca_crime_df <- ca_crime_df %>% mutate(street = tolower(street))# keep all the elemet to lower case
+# length(unique(df$location))
+library("RColorBrewer") 
+pal = brewer.pal(9,"Blues")
+street_name <- as.tibble(table(ca_crime_df$street))
+colnames(street_name) <- c("Street_Name", "Count")
+wordcloud(street_name$Street_Name, street_name$Count, min.freq = 100, random.order = F, random.color = F, colors =c("black", "cornflowerblue", "darkred"), scale = c(2,.3))
+```
+
+So most of the arrest are made in 100 Cambridgeside Place, Upon diagnosing I found out the 100 Cambrdige place address to CambridgeSide Gallaria Mall. Although Cambridge Police Department indicates the location is around the vicinity of 100 blocks range. 100 Cambridgeside Place resides in East Cambridge Neighboorhood. So most  of the crimes that were reported on East Cambridge were comming from 100 Cambridgeside Place.
+
+Next was 600 Massachusetts Avenue and 500 Massachusetts avenue which falls in Cambridgeport neighboorhood. These two address combines brings up the Cambridgeport area with most of the crimes.
+
+# **Hour** {.tabset .tabset-fade .tabset-pills}
+
+**Breakdown Crime by Hour**
+
+```{r}
+ggplot(ca_crime_df, aes(x = hour, fill=as.factor(hour))) +
+  geom_bar(width=0.8, stat="count") +
+  ggtitle("Crime Start Times Records by Hr")+
+  theme_pankaj+
+   labs(caption= "Data Source : Cambridge Data |@ Pankaj Shah")
+```
+
+Interesting the lowest Number of Crime is at 5 am whereas Highest numbers of crime are reported around 5pm.As the day progress the reporting of crime increases and peaks at 12 then falls back and again rise upto 6 and then we see it is dropping back.
+
+
+**Lets see the patterns breaking down by year, month, day of week, day**
+
+```{r warning= FALSE}
+# Crime records starting within a certain hour
+by_hour <- ggplot(ca_crime_df, aes(x = hour, fill=as.factor(hour))) +
+  geom_bar(width=0.8, stat="count") + theme(legend.position="none") +
+  ggtitle("Crime Start Times Records by Hr")
+
+
+# Crime records starting on a certain day of the month
+by_dom <- ggplot(ca_crime_df, aes(x = day, fill=as.factor(day))) +
+  geom_bar(width=0.8, stat="count") + theme(legend.position="none") +
+  ggtitle("Crime Records by Day of Month")
+
+# Crime records starting in each month
+by_mon <-ggplot(ca_crime_df, aes(x = month, fill=as.factor(month))) +
+  geom_bar(width=0.8, stat="count") + theme(legend.position="none") +
+  ggtitle("Crime Records by Month of Year")
+
+# Crime records by day of the week; 0 corresponds to Sunday, 1 to Monday, etc.
+by_dow <- ggplot(ca_crime_df, aes(x = dow, fill=as.factor(dow))) +
+  geom_bar(width=0.8, stat="count") + theme(legend.position="none") +
+  ggtitle("Crime Records by Day of Week")+
+  labs(caption= "Data Source : Cambridge Data |@ Pankaj Shah")
+  #labs (x = c("Mon", "tue", "wed","thrus", "Fri", "Sat"))
+
+# Show these plots next to eachother
+
+grid.arrange(by_dom, by_hour, by_mon, by_dow)
+```
+
+> Crimes tend to rise in Summer months mostly around July, August.
+> Crimes records stay same throughout the month.
+> Crimes tend to be high around evening rush hour commute, mostly hit and run is coming top on the list which makes complete sense.
+> Sunday seems to have less crime and Friday seems to have more crime reported. Understand night life as well Sunday being quite Church Day.
+
+# **Crimes | Day | Month** {.tabset .tabset-fade .tabset-pills}
+
+```{r}
+ggplot(ca_crime_df, aes(x = day, color = as.factor(month), group = month)) +
+    coord_cartesian(xlim = c(1, 31)) +
+    geom_point(stat = 'count') + xlab("Day of Month") +
+    ggtitle("Recorded Crimes in distributed by day in Month")+
+   labs(caption= "Data Source : Cambridge Data |@ Pankaj Shah")+
+  theme_pankaj
+
+
+ggplot(ca_crime_df, aes(x = day, color = as.factor(month), group = month)) +
+    coord_cartesian(xlim = c(1, 7)) +
+    geom_point(stat = 'count') + xlab("Day of Week") +
+    ggtitle("Recorded Crimes in distributed by day in Month")+
+   labs(caption= "Data Source : Cambridge Data |@ Pankaj Shah")+
+  theme_pankaj
+```
+
+I thoughout around first week of every month the crime should peek but seems like the crime is distributed throughout the week in same pattern. Range of crime reports stays the same.Only difference is coming around the seasons.
+
+# **Hit and Run** {.tabset .tabset-fade .tabset-pills}
+
+**You can scroll the axis to see all features.**
+
+```{r}
+hit_n_run <- ca_crime_df[which(ca_crime_df$crime == 'Hit and Run'), ]
+hit_n_run_dom <- ggplot(hit_n_run, aes(x = day, fill=as.factor(day))) +
+                geom_bar(width=0.8, stat="count") + theme(legend.position="none") +
+                ggtitle("Hit and Run Record Start by Day of Month")
+                
+hit_n_run_dom
+
+# Bar graph
+h_run <- ca_crime_df %>%
+  filter(!is.na(crime)) %>%
+    group_by(crime) %>% 
+    filter(crime == "Hit and Run") %>% 
+    group_by(month) %>% 
+    summarise(count = n(),na.rm = TRUE) %>%
+    ungroup() %>%
+    mutate(month = reorder(month, count)) %>% 
+    ggplot(aes(x = month, y = count))+
+    geom_bar(stat = "identity", color = "white", fill = "indianred1")+
+    geom_text(aes(x= month, y = 1, label = paste0("(",count,")", sep = "")),
+              hjust =0, vjust =.5, size = 2, color = 'black', fontface = 'bold')+
+  labs(x = "month", y = "count", title = "Total Hit and Run in Cambridge Neighboorhood by Month")+
+  coord_flip()+
+  theme_bw()+
+  labs(caption= "Data Source : Cambridge Data |@ Pankaj Shah")
+
+# By Month 
+counts <- summarise(group_by(hit_n_run,crime,month), Counts=length(crime))
+counts <- counts[order(counts$month),  ]
+datatable(counts, class = 'compact', options = list(sDom  = '<"top">lrt<"bottom">'))
+
+#create seasons
+ca_crime_df<- ca_crime_df %>% mutate(season = ifelse(month %in% c(6,7,8), "Summer",
+                                                     ifelse(month %in% c(9,10,11), "Fall",
+                                                             ifelse(month %in% c(12,1,2), "Winter",
+                                                                    "Spring"))))
+hit_n_run <- ca_crime_df[which(ca_crime_df$crime == 'Hit and Run'), ]
+counts <- summarise(group_by(hit_n_run,crime,season), Counts=length(crime))
+counts <- counts[order(counts$season),  ]
+datatable(counts, class = 'compact', options = list(sDom  = '<"top">lrt<"bottom">'))
+
+#grid.arrange(by_dom, by_hour, by_mon, by_dow)
+grid.arrange(hit_n_run_dom,h_run)
+```
+
+
+11th and obviously 31st seems to have less hit and run but apart from that we have normal distribution of hit and run. Interesting is April seems to have less Hit and Run Cases and February accounts for most Hit and Run cases. Weatherwise Februaury is Worst month in Northeast Region accumulating lots of snow and making road narrower. Thats why we see lots of Hit and Run Spike around jan and Feb. Also March and April is rainy season, does that account for less hit and run as drivers are driving slow and because of poor visibilty. Also the cyclist and pedestrians are less because of weather. Hard to say but it is easy to assume. Around Summer months I would have guess more hit and run but seems like the report for crime doesnt stays around range of 400-480 and similar in fall.Only thing we could observe is first two months of winter are bad leaving December apart.
+
+#**Comparing top two crime**{.tabset .tabset-fade .tabset-pills} 
+
+**Compare two most reported crime side by side**
+```{r warning= FALSE}
+hitrun_larceny <- ca_crime_df[ca_crime_df$crime == "Hit and Run"|df$crime == "Larceny from MV", ]
+counts <- summarise(group_by(hitrun_larceny, month,crime), Counts=length(month))
+counts <- counts[order(-counts$Counts), ]
+p = dcast(counts, crime ~ month)
+p[is.na(p)] <- 0 #  Convert NA to 0. 
+row.names(p) <- p$crime
+p = p[,-1] 
+columnNames  = factor(names(p), month.abb, ordered=TRUE)
+p = p[,order(columnNames)]
+datatable(p, class = 'compact', options = list(sDom  = '<"top">lrt<"bottom">'))
+```
+
+Larcency from Motor Vehicle is low in February Month and month of December. One Possibilty is February is Winter Month. May be most of the vehichles might be burried or covered in snow. People doesnt leave or become careless when they have to leave the motor vehicle for longer time. It also takes lot of effort to break in when the weather condition is not favorable. As Expeected August 7 october being highest as weather is warmer in August and around October its getting colder.
+
+# **HeatMap**  {.tabset .tabset-fade .tabset-pills}
+**HeatMap Breakdown by the hour in a day within a month of February**
+
+```{r warning=FALSE}
+# Y axis : 24 Hours a day
+# X -axis : Day in month.
+
+crime_month_crime = ca_crime_df[ca_crime_df$month == 2 & ca_crime_df$crime == "Hit and Run", ]
+counts <- summarise(group_by(crime_month_crime,day, hour), Counts=length(hour))
+counts <- counts[order(-counts$Counts), ]
+counts <-  counts[ ,c("hour","day","Counts")]
+q <-  dcast(counts, hour ~ day) # pivot
+q[is.na(q)] <- 0 # Convert NA to 0
+row.names(q) <- q$day # Make day the row names
+q <-  q[ ,-1] # Remove hour column otherwise will shift everything by day
+dmp = data.matrix(q)
+my_palette <- colorRampPalette(c("#fcf14c", "#000000", "red"))(n = 75)  
+
+# Scales should be the default of none
+heatmapDay <- d3heatmap(dmp, Rowv = FALSE, Colv = FALSE,
+          color = my_palette,
+          yaxis_font_size = 12,
+          xaxis_font_size = 12)
+# Because you want to preserve row and col names Rowv = FALSE, Colv = FALSE
+heatmapDay
+```
+**Color Strength :  Yellow < Black < Red**
+
+On the Heatmap if you notice we can see brightest Red dots which falls on 23rd around 16 HRS which is 4'0clock. Most of the crimes related to Hit and Run happens. So its more probable that on 23rd around 4'o clock the cambridge Police department can expect Hit and Run Cases. There are some others falling on 10th of month around 5 o clock. But most of them we can see happening around rush hour 4-6 pm with couple of execption one occuring at 11 Am and other one occuring at 11 PM on same day 14th. How strange is that.
+
+# **Crimes by Month %**
+
+Heatmap of All Percentages
+```{r}
+# Green : Low percentage
+# Red : High Percentage
+percentage_crime <- xtabs(~ crime + month, data= ca_crime_df[ ,c("crime","month")])
+percentage_crime <- rowPerc(percentage_crime)
+percentage_crime <- as.data.frame.matrix(percentage_crime) 
+percentage_crime<- subset(percentage_crime, select = -c(Total) )
+columnNames  = factor(names(percentage_crime), month.abb, ordered=TRUE)
+percentage_crime <-  percentage_crime[ ,order(columnNames)]
+datatable(percentage_crime, class = 'compact', options = list(sDom  = '<"top">lrt<"bottom">'))
+
+dmp_2 = data.matrix(percentage_crime)
+heatmapDay_1 <- d3heatmap(dmp_2, scale = "row",Rowv = FALSE, Colv = FALSE,
+          color = c("#4cfc6a", "#FCF14C", "#fc674c"), #scales::col_quantile("RdYlBu", NULL, 12),
+          yaxis_font_size = 8,
+          xaxis_font_size = 10)
+heatmapDay_1
+```
+
+**Strength: Green < Yellow < Red** 
+
+In this Heat Map we can see what kind of are most occured breaking down by crime and the month. Most of the crimes seems to cool off around winter and picksup aroun summmer month. In our table we saw that crimes that is reported stays the same so around winter month we have more hit and run cases and during summer we have more Larceny and other cases coming through.Accidents are reported around summer and very less in winter which is quite a strange. We might have guessed beacuse of narrow street and snow playing major role in accident there might be more cases but doesnot seems so. Homicide peaks around june and then around november. Arson are reported around month of August.
+Larcency from the Residence spikes around December which makes complete sense as lot of people are buying gifts and expecting deliveries. Prostitution are reported more in march and November.Like these there are various variables to look into and make analysis. 
+
+
+Lets Scale these by column percentagewise as we have seen row percentage wise across.
+Scale by Column
+```{r}
+scale_column <- xtabs(~ crime + month, data= ca_crime_df[ ,c("crime","month")])
+scale_column <- colPerc(scale_column) # Note getting column percent
+scale_column <- as.data.frame.matrix(scale_column) 
+scale_column <- scale_column[!rownames(scale_column) %in% 'Total', ] # have to remove rowname Total
+columnNames  = factor(names(scale_column), month.abb, ordered=TRUE)
+scale_column = scale_column[ ,order(columnNames)]
+
+datatable(scale_column, class = 'compact', options = list(sDom  = '<"top">lrt<"bottom">'))
+
+dmp_3 = data.matrix(scale_column)
+heatmapDay_3 <- d3heatmap(dmp_3, scale = "column",Rowv = FALSE, Colv = FALSE,
+          color = scales::col_quantile("Blues", NULL, 50),
+          yaxis_font_size = 8,
+          xaxis_font_size = 10)
+heatmapDay_3
+```
+
+Lets mix both Rows and Column to get closer Look at Scale.
+
+```{r}
+scale_row <- xtabs(~ crime+ month, data=ca_crime_df[ ,c("crime","month")])
+scale_row <- rowPerc(scale_row) # Row percent
+scale_row <- as.data.frame.matrix(scale_row) 
+scale_row <- subset(scale_row, select = -c(Total) )
+columnNames  = factor(names(scale_row), month.abb, ordered=TRUE)
+scale_row = scale_row[ ,order(columnNames)]
+scale_row_col <- colPerc(scale_row) # We had row percentage, not take col
+scale_row_col <- as.data.frame.matrix(scale_row_col) 
+scale_row_col <- scale_row_col[!rownames(scale_row_col) %in% 'Total', ] # remove rowname Total
+
+datatable(scale_row_col, class = 'compact', options = list(sDom  = '<"top">lrt<"bottom">'))
+
+dmp_4 = data.matrix(scale_row_col)
+my_palette <- colorRampPalette(c("#4cfc6a", "#FCF14C", "#fc674c"))(n = 31)  
+heatmapDay_4 <- d3heatmap(dmp_4, Rowv = FALSE, Colv = FALSE,
+          color = scales::col_quantile(my_palette, NULL, 31),
+          yaxis_font_size = 8,
+          xaxis_font_size = 10)
+heatmapDay_4
+```
+
+
+We can take a see lots of similarity and how things have changed in the heatmap as I have mentioned earlier.
+
+# **Corplot**
+
+```{r}
+counts <- summarise(group_by(ca_crime_df, crime,month),Counts=length(crime))
+counts <- counts[order(counts$month), ]
+crime_plot <- dcast(counts,month ~ crime, value.var = "Counts" )
+crime_plot[is.na(crime_plot)] <- 0
+row.names(crime_plot) <- crime_plot$month # Make month row names
+crime_plot = crime_plot[,-1] # Remove first
+crime_plot <- cor(crime_plot)
+corrplot(crime_plot, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45,number.cex=0.75,tl.cex = 0.48)
+# table format for corplot
+datatable(crime_plot, extensions = 'FixedColumns', options = list(
+    dom = 'tp',
+    deferRender = TRUE,
+    scrollX = TRUE,
+    scroller = TRUE,
+    fixedColumns = list(leftColumns = 1, rightColumns = 0))) 
+
+```
+
+**You can scroll the x-axis to see all features.** 
+
+* If you are Stalking it negatively correlates with Liquor Possession, Tresspassing,Violation of R.O
+* Prostitution is negatively corelated with violation of H.O
+* Sex offender Violation is negatively correlates with Larcency from Residence, Embezzlement.
+
+**Red Dots are Negatively Correlated**
+**Blue dots are positively Correlated**
+
+Lets see how likely person which is involved in Hit and Run and another column Accidents correlates to other crime.
+
+```{r}
+# Select columns that have at least one entry > 0.6
+acc_hitrun <- crime_plot[c("Accident","Hit and Run"), ]
+acc_hitrun <- acc_hitrun[ , colSums(acc_hitrun < 0.6) <= 1]
+
+datatable(acc_hitrun, extensions = 'FixedColumns', options = list(
+    dom = 't',
+    deferRender = TRUE,
+    scrollX = TRUE,
+    scroller = TRUE,
+    fixedColumns = list(leftColumns = 1, rightColumns = 0)))
+```
+
+Person who is involved in accident is negatively correlated to hit and run.if you are involved in accident then there is 81% chance that it will have Admin Error. Thats Funny how things correaltes.
+
+Overall what we discuss above I would like to show the summary in one color from 1st Jan 2009 to 31st Dec 2017.
+
+# **Summary: Time series Breakpoint**
+```{r}
+# by_hour
+by_hour <- ca_crime_df %>% 
+           group_by(hour) %>% 
+           dplyr::summarise(Total = n())
+ggplot(by_hour, aes(hour, Total, color = hour)) + 
+    geom_line() + 
+    ggtitle("Crimes By Hour") + 
+    xlab("Hour of the Day") + 
+    ylab("Total Crimes")+
+    theme_pankaj+
+    labs(caption= "Data Source : Cambridge Data |@ Pankaj Shah")
+
+# by_day
+by_day <- ca_crime_df%>% 
+           group_by(day) %>% 
+           dplyr::summarise(Total = n())
+ggplot(by_day, aes(day, Total, color = day)) + 
+    geom_line() + 
+    ggtitle("Crimes By Day") + 
+    xlab("Day of the Month") + 
+    ylab("Total Crimes")+
+    theme_pankaj+
+    labs(caption= "Data Source : Cambridge Data |@ Pankaj Shah")
+
+#by_month
+by_month <- ca_crime_df%>% 
+            group_by(month) %>% 
+            dplyr::summarise(Total = n())
+
+by_month$Percent <- by_month$Total/dim(ca_crime_df)[1] * 100
+
+ggplot(by_month, aes(month, Total, fill = month)) + 
+        geom_bar(stat = "identity") + 
+        ggtitle("Crimes By Month") + 
+        xlab("Month") + 
+        ylab("Count") + 
+        theme(legend.position = "none")+
+        theme_pankaj+
+        labs(caption= "Data Source : Cambridge Data |@ Pankaj Shah")
+
+#by_year
+by_year <- ca_crime_df %>% 
+           group_by(year) %>% 
+           dplyr::summarise(Total = n())
+by_year$Percent <- by_year$Total/dim( ca_crime_df)[1] * 100
+
+ggplot(by_year, aes(year, Total, fill = year)) + 
+      geom_bar(stat = "identity") +
+      ggtitle("Crimes By Year ") + 
+      xlab("Year") + ylab("Count") + 
+      theme(legend.position = "none")+
+      theme_pankaj+
+      labs(caption= "Data Source : Cambridge Data |@ Pankaj Shah")
+
+# by_hour_year
+by_hour_year <- ca_crime_df %>% 
+                group_by(year,hour) %>%
+                dplyr::summarise(Total = n())
+ggplot(by_hour_year, aes(hour, Total, color = year)) + 
+      geom_line(size = 1) + 
+      ggtitle("Crimes By Year and Hour") + 
+      xlab("Hour of the Day") + 
+      ylab("Total Crimes")+
+      theme_pankaj+
+      labs(caption= "Data Source : Cambridge Data |@ Pankaj Shah")
+
+# by_hour_month
+by_hour_month <- ca_crime_df %>% 
+                 group_by(month,hour) %>% 
+                 dplyr::summarise(Total = n())
+ggplot(by_hour_month, aes(hour, Total, color = month)) + 
+       geom_line(size = 1) + 
+       ggtitle("Crimes By Month and Hour") + 
+       xlab("Hour of the Day") + 
+       ylab("Total Crimes")+
+       theme_pankaj+
+       labs(caption= "Data Source : Cambridge Data |@ Pankaj Shah")
+
+#by_month_day
+by_month_day <-ca_crime_df %>% 
+                group_by(month, day) %>% 
+                dplyr::summarise(Total = n())
+ggplot(by_month_day, aes(day, Total, color = month)) + 
+      geom_line(size = 2) + 
+      ggtitle("Crimes By Month and Day") + 
+      xlab("Year") + 
+      ylab("Count")+
+      theme_pankaj+
+      labs(caption= "Data Source : Cambridge Data |@ Pankaj Shah")
+
+# by_month_year
+by_month_year <-ca_crime_df%>% 
+                 group_by(year, month) %>% 
+                 dplyr::summarise(Total = n())
+ggplot(by_month_year, aes(year, month, fill = Total)) + 
+  geom_tile(color = "white") + 
+  ggtitle("Crimes By Year and Month") + 
+  xlab("Year") + 
+  ylab("Month")+
+  theme_pankaj+
+  labs(caption= "Data Source : Cambridge Data |@ Pankaj Shah")
+```
+
+>Crimes are less during early morning hours but as the day progresses they continue to grow, peak during early evening time and slow down as the day ends.
+>Crimes are more during months which fall in the middle of the year. Similar trend was seen in previous visual.
+>Crimes are most starting from May to August. Is it due because of summer?
+>Leaving out 2016 as it is not completed, if you check other years you will clearly find the reduction in the number of crimes over the last 10 year period.
+>Crimes are decreasing over the years
+* Most noticable trend is decline in crimes during Christmas. There is huge decline in crimes.
+
+# **Crime_Code/Year**
+
+**Crimes by Code breaking down by year**
+```{r echo=FALSE, warning=FALSE, fig.width=9, fig.height=5.5}
+## By code_year:
+by_code_year <- ca_crime_df %>% group_by(year, crime) %>% 
+                dplyr::summarise(Total = n()) %>% 
+                arrange(desc(Total)) %>% 
+                ungroup() %>%
+                mutate(crime = reorder(crime, Total))
+ggplot(by_code_year, aes (crime, Total,fill = year)) + 
+    geom_bar(stat = "identity") + 
+    scale_y_continuous(breaks = seq(0,450000,50000)) + 
+    coord_flip() + ggtitle("Crimes By Code and Year") + 
+    xlab("Crime Code") + 
+    ylab("Total Crimes")
+
+datatable(by_code_year[,c("year","crime", "Total")], 
+          class = 'compact', options = list(sDom  = '<"top">lrt<"bottom">'))
+```
+
+# **Crime_code/Month**
+
+**Crimes by Code breaking down by month**
+
+```{r echo=FALSE, warning=FALSE, fig.width=9, fig.height=5.5}
+## By code_month:
+by_code_month <- ca_crime_df %>% 
+                  group_by(month, crime) %>% 
+                  dplyr::summarise(Total = n()) %>% 
+                  arrange(desc(Total)) %>% 
+                  ungroup() %>%
+                  mutate(month = reorder(month, Total))
+ggplot(by_code_month, aes(reorder(crime, Total), Total, fill = month)) + 
+      geom_bar(stat = "identity") + 
+      scale_y_continuous(breaks = seq(0,450000,50000)) + 
+      coord_flip() + 
+      ggtitle("Crimes By Code and Month") + 
+      xlab("Crime Code") + 
+      ylab("Total Crimes")
+
+# ALT way who doesnt like color but divergent color to see the difference.
+ca_crime_df %>%
+  filter(!is.na(crime)) %>%
+    group_by(month, crime) %>%
+    summarise(count = n()) %>%
+    arrange(desc(count)) %>% 
+    ungroup() %>%
+    mutate(crime = reorder(crime, count)) %>% 
+    ggplot(aes(x = crime, y = count, fill = month))+
+    geom_bar(stat = "identity", color = "white")+
+  #  geom_bar(stat = "identity", color = "white", fill = month)+
+  labs(x = "crime", y = "count", title = "Total crime divided by Month ")+
+  coord_flip()+
+  theme_bw()
+
+datatable(by_code_month[,c("month","crime", "Total")], 
+          class = 'compact', options = list(sDom  = '<"top">lrt<"bottom">'))
+```
+
+```{r echo=FALSE, warning=FALSE, fig.width=9, fig.height=5.5}
+plotcrime  <- function(crime) {
+    crimes <- ca_crime_df[ca_crime_df$crime == crime, ] 
+    crimes_by_date <- crimes %>% group_by(date_of_report) %>% dplyr::summarise(Total = n())
+    crimes_by_date$date_of_report <- as.Date(crimes_by_date$date_of_report)
+    plot <- ggplot(crimes_by_date, aes(date_of_report, Total, color = date_of_report )) + geom_line() + ggtitle(paste(crime," - (2009-2017)", sep = " ")) + xlab("Date") 
+    
+    plot
+}
+
+plotcrime("Hit and Run")
+plotcrime("Larceny from MV")
+plotcrime("Domestic Dispute")
+plotcrime("Shoplifting")
+plotcrime("Warrant Arrest")
+plotcrime("Mal. Dest. Property")
+```
+
+
+# **Top crime in each Neighborhood**
+
+```{r}
+# What are top Crimes in each Neighborhood ?
+neighborhood_by_crime <- ca_crime_df  %>% 
+      group_by(neighborhood, crime) %>% 
+      dplyr::summarise(Total = n()) %>% 
+      arrange(desc(Total)) %>% top_n(n = 1)
+
+# Lets convert above table into dataframe
+neighborhood_by_crime <- as.data.frame(neighborhood_by_crime)
+neighborhood_by_crime$neighborhood <- factor(neighborhood_by_crime$neighborhood)
+neighborhood_by_crime$crime <- factor(neighborhood_by_crime$crime)
+neighborhood_by_crime <- as.data.frame(neighborhood_by_crime)
+ggplot(neighborhood_by_crime, aes(reorder(neighborhood,Total), Total, fill = crime)) + 
+      geom_bar(stat = "identity") + 
+      ggtitle("Top Crime in each Neighborhood 2009-2017") +
+      geom_text(aes(x= neighborhood, y = 1, label = paste0(" ",Total)),
+              hjust =0, vjust =.25, size = 4, color = 'black', fontface = 'bold')+
+      xlab("Neighborhood") + 
+      ylab("Total Count") +
+  coord_flip()
+
+datatable(neighborhood_by_crime[,c("neighborhood","crime", "Total")], 
+          class = 'compact', options = list(sDom  = '<"top">lrt<"bottom">'))
+
+# What about year 2018? Is it same?
+neighborhood_by_crime_2018 <- df %>% 
+                          filter(year == 2018) %>% 
+                           group_by(neighborhood, crime) %>% 
+                           dplyr::summarise(Total = n()) %>% 
+                           arrange(desc(Total)) %>% top_n(n = 1)
+
+neighborhood_by_crime_2018 <- as.data.frame(neighborhood_by_crime_2018)
+neighborhood_by_crime_2018$neighborhood <- factor(neighborhood_by_crime_2018$neighborhood)
+neighborhood_by_crime_2018$crime <- factor(neighborhood_by_crime_2018$crime)
+
+ggplot(neighborhood_by_crime_2018, aes(reorder(neighborhood,Total), Total, fill = crime)) + 
+      geom_bar(stat = "identity") + 
+      ggtitle("Top Crime in each Neighborhood 2018") +
+      geom_text(aes(x= neighborhood, y = 1, label = paste0(" ",Total)),
+              hjust =0, vjust =.25, size = 4, color = 'black', fontface = 'bold')+
+      xlab("Neighborhood") + 
+      ylab("Total Count") +
+  coord_flip()
+```
+
+# **Top Crime in each Reporting Area**
+```{r warning = FALSE}
+crime_by_reporting_area <- ca_crime_df  %>% 
+                          group_by(reporting_area, crime) %>% 
+                          dplyr::summarise(Total = n()) %>% 
+                          arrange(desc(Total)) %>% top_n(n = 1)
+crime_by_reporting_area <- as.data.frame(crime_by_reporting_area)
+crime_by_reporting_area$reporting_area <- factor(crime_by_reporting_area$reporting_area)
+crime_by_reporting_area$crime <- factor(crime_by_reporting_area$crime)
+
+datatable(crime_by_reporting_area[,c("reporting_area","crime", "Total")], 
+          class = 'compact', options = list(sDom  = '<"top">lrt<"bottom">'))
+```
+
+# **Top Crime in each Neighborhood/Reporting Area**
+```{r warning=FALSE}
+crime_by_neighborhood_reporting_area <- ca_crime_df  %>% 
+        group_by(neighborhood, reporting_area, crime) %>% 
+        dplyr::summarise(Total = n()) %>% 
+        arrange(desc(Total)) %>% top_n(n = 1)
+crime_by_neighborhood_reporting_area <- as.data.frame(crime_by_neighborhood_reporting_area)
+crime_by_neighborhood_reporting_area$neighborhood <- factor(crime_by_neighborhood_reporting_area$neighborhood)
+crime_by_neighborhood_reporting_area$crime <- factor(crime_by_neighborhood_reporting_area$crime)
+
+datatable(crime_by_neighborhood_reporting_area[,c("neighborhood","reporting_area","crime", "Total")], 
+          class = 'compact', options = list(sDom  = '<"top">lrt<"bottom">'))
+```
+
+# **Top Two Crime Neighborhoods**
+
+* 101-109 reporting area falls in East Cambridge
+* 501- 510  reporting area falls in Cambridgeport
+
+```{r}
+# Reporting Area of East Cambridge
+ec <- ca_crime_df %>% 
+  filter(neighborhood == "East Cambridge"| neighborhood == "Cambridgeport" ) %>% 
+  group_by(reporting_area) %>% 
+  count
+
+datatable(ec[,c("reporting_area","n")], 
+          class = 'compact', options = list(sDom  = '<"top">lrt<"bottom">'))
+```
+
+**Conclusion**
+
+See the Executive Summary for detail Analysis Finding at the top of page.
+
+
+**Thank you for Reading the Post.Hope you enjoyed reading as much as "fun" I had making it.**
